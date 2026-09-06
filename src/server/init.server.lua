@@ -179,7 +179,7 @@ end
 	explicit: statuses tick before combat reads them, combat resolves before the
 	AI decides what to do about it.
 ]]
-local TICKED = { "StatusService", "CombatService", "EnemyService", "BossService", "RunManager" }
+local TICKED = { "StatusService", "CombatService", "EnemyService", "BossService", "BoonService", "RunManager" }
 
 RunService.Heartbeat:Connect(function(deltaTime)
 	for _, name in TICKED do

@@ -762,9 +762,11 @@ function CombatService.ApplyDamage(attackerState: Combatant?, target: Combatant,
 	-- Meter. Dealing damage charges slower than taking it; getting hit should
 	-- never feel like it gave you nothing.
 	if attackerState then
+		local chargeScale = 1 + (attackerState.modifiers.ultimateChargeBonus or 0)
 		attackerState.ultimate = math.min(
 			GameConfig.Combat.UltimateMax,
-			attackerState.ultimate + result.amount * GameConfig.Combat.UltimateGainPerDamageDealt
+			attackerState.ultimate
+				+ result.amount * GameConfig.Combat.UltimateGainPerDamageDealt * chargeScale
 		)
 	end
 	target.ultimate = math.min(

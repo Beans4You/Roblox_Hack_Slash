@@ -46,6 +46,8 @@ BossService.PhaseChanged = Signal.new()
 local registry: any = nil
 
 export type BossHandle = {
+	-- Unique per spawned instance.
+	handleId: string,
 	id: string,
 	definition: any,
 	combatant: any,
@@ -72,7 +74,10 @@ export type BossHandle = {
 	startedAt: number,
 }
 
+--- Keyed by a unique handle id, not by boss id: two sessions can legitimately be
+--- fighting the same Warden at the same time in different lanes.
 local active: { [string]: BossHandle } = {}
+local nextHandleId = 0
 
 local function flat(vector: Vector3): Vector3
 	return Vector3.new(vector.X, 0, vector.Z)
@@ -637,7 +642,10 @@ function BossService.Spawn(bossId: string, arenaOrigin: CFrame, container: Folde
 	combatant.weakPoints = weakPoints
 	combatant.weakPointsActive = false
 
+	nextHandleId += 1
+
 	local handle: BossHandle = {
+		handleId = ("boss_%d"):format(nextHandleId),
 		id = bossId,
 		definition = definition,
 		combatant = combatant,
@@ -664,7 +672,7 @@ function BossService.Spawn(bossId: string, arenaOrigin: CFrame, container: Folde
 	}
 
 	handle.maid:Add(rig)
-	active[bossId] = handle
+	active[handle.handleId] = handle
 
 	-- The greeting is chosen by how many times this boss has killed this player.
 	task.delay(0.6, function()
@@ -747,13 +755,26 @@ function BossService.HandleDefeat(handle: BossHandle)
 	end
 
 	Net.FireAllClients("BossSync", { active = false })
+	-- The handle travels with the signal so the listener can tell which session's
+	-- Warden this was.
 	BossService.BossDefeated:Fire(handle.id, {
 		flawless = not handle.playerTookDamage,
 		duration = os.clock() - handle.startedAt,
-	})
+	}, handle)
 
 	Debris:AddItem(handle.character, 6)
-	active[handle.id] = nil
+	active[handle.handleId] = nil
+end
+
+--- Removes one boss. Used when its session ends.
+function BossService.Despawn(handle: BossHandle?)
+	if not handle then
+		return
+	end
+	handle.alive = false
+	handle.maid:DoCleaning()
+	active[handle.handleId] = nil
+	Net.FireAllClients("BossSync", { active = false })
 end
 
 function BossService.DespawnAll()
