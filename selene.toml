@@ -1,0 +1,5 @@
+std = "roblox"
+
+[rules]
+shadowing = "allow"
+multiple_statements = "allow"

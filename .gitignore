@@ -1,0 +1,18 @@
+# Rojo / Roblox build output
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+*.rbxm
+*.rbxmx
+build/
+# Tooling
+.rokit/
+.aftman/
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+# Luau LSP
+sourcemap.json
