@@ -648,6 +648,7 @@ function RunManager.StartRun(player: Player, weaponId: string, regionId: string,
 	sessions[player] = session
 	session.maid:Add(session.roomMaid)
 
+	registry.RoomBuilder.ApplyRegionLighting(region)
 	registry.ProgressionService.NoteRunStarted(player, weaponId)
 	registry.BoonService.BeginRun(player, registry.ProgressionService.ExtraRerolls(player))
 	registry.PlayerService.PrepareForRun(player, weaponId)

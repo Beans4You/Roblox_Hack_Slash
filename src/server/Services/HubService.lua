@@ -466,6 +466,7 @@ function HubService.ReturnToHub(player: Player)
 	if combatant then
 		combatant.humanoid.Health = combatant.humanoid.MaxHealth
 	end
+	registry.RoomBuilder.ApplyHubLighting()
 	HubService.RefreshStructures()
 end
 
@@ -608,6 +609,7 @@ end
 
 function HubService.Start()
 	HubService.Build()
+	registry.RoomBuilder.ApplyHubLighting()
 
 	Net.OnServerInvoke("HubAction", function(player, action, payload)
 		local handler = ACTIONS[tostring(action)]

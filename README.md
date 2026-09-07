@@ -42,15 +42,19 @@ timings, no feel, no balance. See *Known gaps* at the bottom.
 
 ## Running it
 
+**Just want to look at it?** Build a place file with nothing but Python, then
+double-click the result and press Play in Studio:
+
+```sh
+python3 tools/build_place.py
+```
+
+**Going to work on it?** Use Rojo, which live-syncs file edits into an open
+Studio session:
+
 ```sh
 rokit install          # or: aftman install
 rojo serve             # then connect from Roblox Studio
-```
-
-Or build a place file directly:
-
-```sh
-rojo build -o HollowVerge.rbxl
 ```
 
 There are no uploaded assets to fetch. Every enemy, weapon, room and cosmetic in

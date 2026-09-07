@@ -16,3 +16,4 @@ build/
 .DS_Store
 # Luau LSP
 sourcemap.json
+HollowVerge.rbxlx

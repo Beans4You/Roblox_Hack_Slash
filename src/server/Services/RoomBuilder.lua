@@ -427,6 +427,51 @@ local function applyRegionHazard(context: BuildContext, region: any, footprint: 
 end
 
 --------------------------------------------------------------------------------
+-- Region lighting
+--
+-- A region's palette does half the work of making it feel different; the light
+-- does the other half. The Sunken March is a blue pre-dawn with heavy fog, the
+-- Cinder Reach is a low orange dusk, the Rimefast Sanctum is flat and far too
+-- bright. Applied on entering a run and restored on returning to Emberhold.
+--------------------------------------------------------------------------------
+
+local Lighting = game:GetService("Lighting")
+
+local HUB_LIGHTING = {
+	ambient = Color3.fromRGB(33, 30, 40),
+	fogColor = Color3.fromRGB(23, 20, 30),
+	fogEnd = 480,
+	brightness = 2,
+	clockTime = 17.5,
+}
+
+--- Eases Lighting toward a region's mood. Tweened rather than set, so the
+--- transition between rooms and back to the hub is not a hard cut.
+local function applyLighting(spec: any)
+	local TweenService = game:GetService("TweenService")
+	local info = TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+	TweenService:Create(Lighting, info, {
+		Ambient = spec.ambient,
+		OutdoorAmbient = spec.ambient,
+		FogColor = spec.fogColor,
+		FogEnd = spec.fogEnd,
+		Brightness = spec.brightness,
+		ClockTime = spec.clockTime,
+	}):Play()
+end
+
+function RoomBuilder.ApplyRegionLighting(region: any)
+	if region and region.lighting then
+		applyLighting(region.lighting)
+	end
+end
+
+function RoomBuilder.ApplyHubLighting()
+	applyLighting(HUB_LIGHTING)
+end
+
+--------------------------------------------------------------------------------
 -- Build
 --------------------------------------------------------------------------------
 
