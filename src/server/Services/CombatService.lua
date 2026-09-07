@@ -125,6 +125,8 @@ export type Combatant = {
 	currentAttackId: string?,
 	-- Status the current enemy attack applies on its first landed hit.
 	pendingStatus: string?,
+	-- EnemyId of whatever last damaged this combatant, for death attribution.
+	lastAttackerId: string?,
 	-- Knockback resistance. Higher is heavier.
 	weight: number?,
 	-- Shieldbearers reduce damage inside this cone of their facing, in degrees.

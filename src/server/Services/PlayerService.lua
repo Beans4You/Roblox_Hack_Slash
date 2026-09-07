@@ -200,6 +200,21 @@ local function onCharacterAdded(player: Player, character: Model)
 
 	PartFactory.SetCollisionGroup(character, GameConfig.Collision.Player)
 
+	-- Roblox's default Animate script drives the same Motor6Ds ProceduralAnimator
+	-- writes to, and the two fight for control every frame. Since this game has no
+	-- uploaded animations for it to play anyway, it goes.
+	local animate = character:FindFirstChild("Animate")
+	if animate then
+		animate:Destroy()
+	end
+	local defaultAnimator = humanoid:FindFirstChildOfClass("Animator")
+	if defaultAnimator then
+		-- Kill anything the default script already started before it was removed.
+		for _, track in defaultAnimator:GetPlayingAnimationTracks() do
+			track:Stop(0)
+		end
+	end
+
 	-- Default weapon so the player is never empty-handed in the hub.
 	local profile = registry.DataService.Get(player)
 	local defaultWeapon = "Vigil"

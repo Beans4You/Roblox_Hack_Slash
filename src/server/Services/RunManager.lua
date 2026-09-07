@@ -431,8 +431,10 @@ end
 local function enterRoom(session: Session, plan: any)
 	clearRoomFeatures(session)
 
-	-- Retire rooms the player is well past.
-	table.insert(session.previousRooms, session.currentRoom)
+	-- Retire rooms the player is well past. Nil on the first room of a run.
+	if session.currentRoom then
+		table.insert(session.previousRooms, session.currentRoom)
+	end
 	while #session.previousRooms > GameConfig.Performance.KeepPreviousRooms + 1 do
 		local old = table.remove(session.previousRooms, 1)
 		if old then

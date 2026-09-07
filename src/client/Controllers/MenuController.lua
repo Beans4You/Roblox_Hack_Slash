@@ -31,6 +31,7 @@ local TweenService = game:GetService("TweenService")
 local GuiService = game:GetService("GuiService")
 
 local Shared = game:GetService("ReplicatedStorage"):WaitForChild("HollowVerge")
+local GameConfig = require(Shared.Config.GameConfig)
 local Lore = require(Shared.Config.Lore)
 local WeaponConfig = require(Shared.Config.WeaponConfig)
 local RelicConfig = require(Shared.Config.RelicConfig)
@@ -672,6 +673,51 @@ local function buildExpedition(payload: any)
 				selectedRegion = region.id
 			end
 		end
+
+		-- Heat. Optional difficulty that multiplies rewards; the only route to some
+		-- cosmetics. A stepper rather than a slider because the interesting
+		-- decision is one notch at a time, not a value you drag to.
+		local heatPanel = UiKit.Frame({
+			Size = UDim2.fromOffset(150, 44),
+			BackgroundTransparency = 1,
+			LayoutOrder = 90,
+			Parent = footer,
+		})
+		local heatLabel = UiKit.Label({
+			Size = UDim2.new(1, -70, 1, 0),
+			Position = UDim2.fromOffset(0, 0),
+			Text = "",
+			TextSize = 13,
+			Font = UiKit.Fonts.Heading,
+			Parent = heatPanel,
+		})
+
+		local function refreshHeat()
+			local multiplier = 1 + selectedHeat * GameConfig.Run.RewardPerHeat
+			heatLabel.Text = ("HEAT %d\n<font color='#8a8a8a'>×%.2f rewards</font>")
+				:format(selectedHeat, multiplier)
+			heatLabel.TextColor3 = if selectedHeat > 0 then UiKit.Colors.Danger else UiKit.Colors.TextDim
+		end
+
+		local function heatButton(text: string, delta: number, x: number)
+			local button = UiKit.Button({
+				Size = UDim2.fromOffset(30, 30),
+				Position = UDim2.new(1, x, 0.5, 0),
+				AnchorPoint = Vector2.new(1, 0.5),
+				Text = text,
+				TextSize = 18,
+				Parent = heatPanel,
+			})
+			button.Activated:Connect(function()
+				selectedHeat = math.clamp(selectedHeat + delta, 0, payload.maxHeat or GameConfig.Run.MaxHeat)
+				refreshHeat()
+				registry.AudioController.PlayLocal("UiSelect")
+			end)
+		end
+
+		heatButton("−", -1, -34)
+		heatButton("+", 1, 0)
+		refreshHeat()
 
 		local descend = UiKit.Button({
 			Size = UDim2.fromOffset(200, 44),
