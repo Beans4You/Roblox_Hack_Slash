@@ -27,10 +27,8 @@
 local Shared = game:GetService("ReplicatedStorage"):WaitForChild("HollowVerge")
 local GameConfig = require(Shared.Config.GameConfig)
 local BoonConfig = require(Shared.Config.BoonConfig)
-local StatusConfig = require(Shared.Config.StatusConfig)
 local Lore = require(Shared.Config.Lore)
 local Hitbox = require(Shared.Combat.Hitbox)
-local Rng = require(Shared.Util.Rng)
 local Net = require(Shared.Net.Net)
 local Signal = require(Shared.Util.Signal)
 

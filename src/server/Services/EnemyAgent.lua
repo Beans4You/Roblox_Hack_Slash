@@ -28,7 +28,6 @@
 
 local Shared = game:GetService("ReplicatedStorage"):WaitForChild("HollowVerge")
 local GameConfig = require(Shared.Config.GameConfig)
-local EnemyConfig = require(Shared.Config.EnemyConfig)
 local Net = require(Shared.Net.Net)
 
 local EnemyAgent = {}

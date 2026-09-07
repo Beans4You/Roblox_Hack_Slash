@@ -151,15 +151,6 @@ Net.Definitions = {
 		description = "{ synergyId, name, description }",
 	},
 
-	--- Generic world interaction: NPCs, pedestals, chests, doors, the run gate.
-	Interact = {
-		name = "Interact",
-		kind = "Event",
-		direction = "ClientToServer",
-		description = "{ targetId }",
-		rateLimit = 8,
-	},
-
 	--- Dialogue beats, pushed one line at a time.
 	Dialogue = {
 		name = "Dialogue",
